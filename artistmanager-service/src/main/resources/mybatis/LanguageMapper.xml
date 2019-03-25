@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lunzn.artistmanager.dao.LanguageMapper">
+  <resultMap id="BaseResultMap" type="com.lunzn.artistmanager.model.Language">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="languageid" jdbcType="VARCHAR" property="languageId" />
+    <result column="nativename" jdbcType="VARCHAR" property="nativeName" />
+    <result column="englishname" jdbcType="VARCHAR" property="englishName" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="updatetime" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, languageid, nativename, englishname, area, createtime, updatetime
+  </sql>
+  <select id="queryLanguageList" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List"/>
+  	from t_language
+  </select>
+</mapper>

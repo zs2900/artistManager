@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lunzn.artistmanager.dao.DataDicMapper">
+  <resultMap id="BaseResultMap" type="com.lunzn.artistmanager.model.DataDic">
+    <id column="dictionarycode" jdbcType="VARCHAR" property="dictionaryCode" />
+    <id column="dicitemcode" jdbcType="VARCHAR" property="dicitemCode" />
+    <id column="dictionaryname" jdbcType="VARCHAR" property="dictionaryName" />
+    <id column="dicitemname_zh" jdbcType="VARCHAR" property="dicitemNameZh" />
+    <id column="dicitemname_en" jdbcType="VARCHAR" property="dicitemNameEn" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    dictionarycode, dicitemcode, dictionaryname, dicitemname_zh, dicitemname_en
+  </sql>
+  <select id="queryDataDic" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List"/>
+  	from t_datadic
+  	where dictionarycode = #{dictionaryCode,jdbcType=VARCHAR}
+  </select>
+  <!-- <sql id="Base_Column_List">
+    dictionarycode, dicitemcode, dictionaryname, dicitemname_zh, dicitemname_en
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.lunzn.artistmanager.model.DataDicKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_datadic
+    where dictionarycode = #{dictionarycode,jdbcType=VARCHAR}
+      and dicitemcode = #{dicitemcode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.lunzn.artistmanager.model.DataDicKey">
+    delete from t_datadic
+    where dictionarycode = #{dictionarycode,jdbcType=VARCHAR}
+      and dicitemcode = #{dicitemcode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.lunzn.artistmanager.model.DataDic">
+    insert into t_datadic (dictionarycode, dicitemcode, dictionaryname, 
+      dicitemname_zh, dicitemname_en)
+    values (#{dictionarycode,jdbcType=VARCHAR}, #{dicitemcode,jdbcType=VARCHAR}, #{dictionaryname,jdbcType=VARCHAR}, 
+      #{dicitemnameZh,jdbcType=VARCHAR}, #{dicitemnameEn,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lunzn.artistmanager.model.DataDic">
+    insert into t_datadic
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dictionarycode != null">
+        dictionarycode,
+      </if>
+      <if test="dicitemcode != null">
+        dicitemcode,
+      </if>
+      <if test="dictionaryname != null">
+        dictionaryname,
+      </if>
+      <if test="dicitemnameZh != null">
+        dicitemname_zh,
+      </if>
+      <if test="dicitemnameEn != null">
+        dicitemname_en,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dictionarycode != null">
+        #{dictionarycode,jdbcType=VARCHAR},
+      </if>
+      <if test="dicitemcode != null">
+        #{dicitemcode,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryname != null">
+        #{dictionaryname,jdbcType=VARCHAR},
+      </if>
+      <if test="dicitemnameZh != null">
+        #{dicitemnameZh,jdbcType=VARCHAR},
+      </if>
+      <if test="dicitemnameEn != null">
+        #{dicitemnameEn,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lunzn.artistmanager.model.DataDic">
+    update t_datadic
+    <set>
+      <if test="dictionaryname != null">
+        dictionaryname = #{dictionaryname,jdbcType=VARCHAR},
+      </if>
+      <if test="dicitemnameZh != null">
+        dicitemname_zh = #{dicitemnameZh,jdbcType=VARCHAR},
+      </if>
+      <if test="dicitemnameEn != null">
+        dicitemname_en = #{dicitemnameEn,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where dictionarycode = #{dictionarycode,jdbcType=VARCHAR}
+      and dicitemcode = #{dicitemcode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lunzn.artistmanager.model.DataDic">
+    update t_datadic
+    set dictionaryname = #{dictionaryname,jdbcType=VARCHAR},
+      dicitemname_zh = #{dicitemnameZh,jdbcType=VARCHAR},
+      dicitemname_en = #{dicitemnameEn,jdbcType=VARCHAR}
+    where dictionarycode = #{dictionarycode,jdbcType=VARCHAR}
+      and dicitemcode = #{dicitemcode,jdbcType=VARCHAR}
+  </update> -->
+</mapper>

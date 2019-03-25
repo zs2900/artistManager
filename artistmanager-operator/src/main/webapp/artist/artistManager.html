@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>艺人管理</title>
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="jquery/jquery.min.js"></script>
+
+<!-- 导入公共样式和js -->
+<script src="theme/js/common.js"></script>
+
+<!-- 导入本身js -->
+<script src="artist/artist.js"></script>
+
+<!-- 导入下载Js -->
+<script src="bootstrap/js/fileinput.min.js"></script>
+<script src="bootstrap/js/locales/zh.js" type="text/javascript"></script>
+<link href="bootstrap/css/fileinput.min.css" media="all"
+	rel="stylesheet" type="text/css" />
+
+<!-- 选择 -->
+<script src="bootstrap/js/bootstrap-select.min.js"></script>
+<link href="bootstrap/css/bootstrap-select.min.css" rel="stylesheet"
+	type="text/css" />
+<script type="text/javascript">
+	$(function() {
+		$("#chinese").on("click", function() {
+			$("#en_artistI18n").attr("hidden", "hidden");
+			$(this).attr("class", "btn btn-primary");
+			$("#english").attr("class", "btn btn-default")
+			$("#zh_artistI18n").removeAttr("hidden");
+		});
+		$("#english").on("click", function() {
+			$(this).attr("class", "btn btn-primary");
+			$("#chinese").attr("class", "btn btn-default")
+			$("#zh_artistI18n").attr("hidden", "hidden");
+			$("#en_artistI18n").removeAttr("hidden");
+		});
+	});
+</script>
+<style type="text/css">
+.pic_pre_img {
+	width: 150px;
+	height: 70px;
+	margin: 5px;
+}
+
+.pointer {
+	cursor: pointer;
+}
+
+.editor {
+	margin-bottom: 35px;
+}
+
+.addBgPic {
+	background: url(resources/images/add_pic_bg.png) no-repeat;
+	background-position: center;
+	background-color: #F0F2F5;
+}
+
+.delIcon {
+	background: url(resources/images/cancel.png) no-repeat;
+	background-size: 100%;
+	position: absolute;
+	right: -10px;
+	top: -10px;
+	width: 20px;
+	height: 20px;
+	display: none;
+	cursor: pointer;
+}
+
+.subImg {
+	max-width: 100%;
+	max-height: 100%;
+	cursor: pointer;
+	width: 100%;
+	height: 100%;
+	display: none;
+	position: absolute;
+}
+
+.pic_pre_div {
+	width: 160px;
+	height: 80px;
+	border: 0.5px dashed #bdc2c8;
+	float: left;
+	position: relative;
+}
+
+.infohr {
+	margin-top: 10px;
+	border-top: 1px solid #aaa;
+}
+
+.infoh3 {
+	margin-bottom: 0px;
+}
+
+</style>
+</head>
+<body>
+	<div class="panel-body" style="padding-bottom: 0px; height: 100%;margin-left:50px;margin-right:50px">
+		<div class="panel panel-default">
+			<div class="panel-heading">艺人管理</div>
+			<div class="panel-body">
+				<form id="searchform" role="form" class="form-horizontal">
+					<!-- 让控件水平对齐放置  -->
+					<div class="row">
+						<div class="col-xs-12 col-md-12">
+							<div class="form-group col-md-12">
+								<!-- 省份 -->
+								<div class="col-md-3">
+									<input type="text" class="form-control" id="txt_search_name"
+										name="artistName" placeholder="请输入艺人名称" />
+								</div>
+								<!-- 市县 -->
+								<div class="col-md-3">
+									<input type="text" class="form-control"
+										id="txt_search_artistCode" name="artistCode"
+										placeholder="请输入艺人编号" />
+								</div>
+								<div class="col-md-3">
+									<input type="text" class="form-control"
+										id="txt_search_foreignName" name="foreignName"
+										placeholder="请输入外文名" />
+								</div>
+								<div class="col-md-3">
+									<input type="text" class="form-control" id="txt_search_alias"
+										name="alias" placeholder="请输入别名" />
+								</div>
+							</div>
+
+						</div>
+						<div class="col-xs-12 col-md-12">
+							<div class="form-group col-md-12">
+								<div class="col-md-3">
+									<input type="text" class="form-control"
+										id="txt_search_homeTown" name="homeTown" placeholder="请输入出生地" />
+								</div>
+								<div class="col-md-3">
+									<select class="form-control"
+										id="txt_search_nationality" name="countryName">
+									</select>
+								</div>
+								<div class="col-md-3">
+									<select class="form-control" id="txt_search_artistType"
+										name="artistType">
+									</select>
+								</div>
+								<!--  -->
+								<div class="col-md-3">
+									<div style="float: right">
+										<button type="button" id="btn_query" class="btn btn-primary"
+											style="min-width: 100px;">查询</button>
+										<button type="button"
+											style="margin-left: 5px; min-width: 100px;" id="btn_clear"
+											class="btn btn-default">清空</button>
+										<button type="button"
+											style="margin-left: 5px; min-width: 100px;" id="btn_add"
+											class="btn btn-primary">新增</button>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12 col-md-12">
+				<table id="tb_ircodetype" class="table-hover table-striped"></table>
+			</div>
+		</div>
+
+		<!-- 新增编辑艺人（Modal）begin -->
+		<div class="modal fade" id="addEditModel" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog" style="width: 600px">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="addEditLabel">新增编辑艺人</h4>
+					</div>
+					<div class="modal-body overflow"
+						style="height: 650px; overflow-y: scroll">
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<form id="addEditform" role="form" class="form-horizontal">
+									<input type="hidden" id="addEditType">
+									<div class="col-xs-12 col-md-12">
+										<div class="form-group col-md-12 editor">
+											<p class="col-md-12">添加多语言后，请填写多语言信息。</p>
+											<div class="col-md-6">
+												<button type="button" class="btn btn-primary" id="chinese"
+													style="min-width: 100px;" value="中文">中文</button>
+												<button type="button" class="btn btn-default" id="english"
+													style="min-width: 100px;" value="英文">英文</button>
+											</div>
+										</div>
+									</div>
+									<div id="zh_artistI18n">
+										<input type="hidden" id="zh_artistI18n_id">
+										<div class="col-xs-12 col-md-12">
+											<!-- 备注信息 -->
+											<div class="form-group col-md-6 editor" style="float: left;">
+												<label class="control-label col-md-2 red-star" for="zh_artistI18n_artistCode">编号</label>
+												<div class="col-md-8">
+													<input type="text" class="form-control" readonly="readonly"
+														id="zh_artistI18n_artistCode" name="zh_artistCode">
+												</div>
+											</div>
+
+											<div class="form-group col-md-6 editor" style="float: right;">
+												<!-- 频道名称 -->
+												<label for="txt_edit_zh_name" class="control-label col-md-2 red-star">名称</label>
+												<div class="col-md-8">
+													<input type="text" class="form-control"
+														id="txt_edit_zh_name" name="zh_name"/>
+												</div>
+											</div>
+
+										</div>
+
+										<div class="col-xs-12 col-md-12">
+											<!-- 模板类型 -->
+											<div class="form-group col-md-6 editor" style="float: left;">
+												<label class="control-label col-md-2" for="txt_edit_zh_foreignName">外文名</label>
+												<div class="col-md-8">
+													<input type="text" class="form-control"
+														id="txt_edit_zh_foreignName" name="zh_foreignName"/>
+												</div>
+											</div>
+											<!-- 标签 -->
+											<div class="form-group col-md-6 editor" style="float: right;">
+												<label class="control-label col-md-2" for="txt_add_zh_alias">别名</label>
+												<div class="col-md-8">
+													<input type="text" class="form-control"
+														id="txt_add_zh_alias" name="zh_alias">
+												</div>
+											</div>
+										</div>
+
+										<div class="col-xs-12 col-md-12">
+											<!-- 出身地 -->
+											<div class="form-group col-md-6 editor" style="float: left;">
+												<label class="control-label col-md-2" for="txt_edit_zh_homeTown">出身地</label>
+												<div class="col-md-8">
+													<input type="text" class="form-control"
+														id="txt_edit_zh_homeTown" name="zh_homeTown">
+												</div>
+											</div>
+
+											<div class="form-group col-md-6 editor" style="float: right">
+												<label class="control-label col-md-2" for="txt_edit_zh_des">简介</label>
+												<div class="col-md-8">
+													<textarea name="zh_description" cols="50" rows="5"
+														class="form-control"
+														id="txt_edit_zh_des" style="resize: none;"></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div id="en_artistI18n">
+										<div class="col-xs-12 col-md-12">
+											<!-- 备注信息 -->
+											<input type="hidden" id="en_artistI18n_id">
+											<div class="form-group col-md-6 editor">
+												<label class="control-label col-md-2 red-star" for="en_artistI18n_artistCode">artistCode</label>
+												<div class="col-md-8">
+													<input type="text" class="form-control"
+														id="en_artistI18n_artistCode" name="en_artistCode"
+														readOnly="readonly">
+												</div>
+											</div>
+
+											<div class="form-group col-md-6 editor" style="float: right">
+												<!-- 艺人英文名称 -->
+												<label for="txt_edit_en_name" class="control-label col-md-2 red-star">name</label>
+												<div class="col-md-8">
+													<input type="text" class="form-control"
+														id="txt_edit_en_name" name="en_name"/>
+												</div>
+											</div>
+
+										</div>
+
+										<div class="col-xs-12 col-md-12">
+											<!-- 外文名称 -->
+											<div class="form-group col-md-6 editor">
+												<label class="control-label col-md-2" for="txt_edit_en_alias">foreignName</label>
+												<div class="col-md-8">
+													<input type="text" class="form-control"
+														id="txt_edit_en_foreignName" name="en_foreignName"/>
+												</div>
+											</div>
+											<!-- 别名 -->
+											<div class="form-group col-md-6 editor" style="float: right">
+												<label class="control-label col-md-2" for="txt_edit_en_alias">别名</label>
+												<div class="col-md-8">
+													<input type="text" class="form-control"
+														id="txt_edit_en_alias" name="en_alias">
+												</div>
+											</div>
+										</div>
+
+										<div class="col-xs-12 col-md-12">
+											<!-- 出身地 -->
+											<div class="form-group col-md-6 editor">
+												<label class="control-label col-md-2" for="txt_edit_en_homeTown">homeTown</label>
+												<div class="col-md-8">
+													<input type="text" class="form-control"
+														id="txt_edit_en_homeTown" name="en_homeTown">
+												</div>
+											</div>
+											<!-- 选择关联渠道 -->
+											<div class="form-group col-md-6 editor" style="float: right">
+												<label class="control-label col-md-2" for="txt_edit_en_des">简介</label>
+												<div class="col-md-8">
+													<textarea name="en_description" cols="50" rows="5"
+														class="form-control"
+														id="txt_edit_en_des" style="resize: none;"></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<!-- 基本信息 -->
+									<div>
+										<div class="col-xs-12 col-md-12">
+											<div class="form-group col-md-12 editor">
+												<h3 class="col-md-12 infoh3">基本信息</h3>
+												<div class="col-md-12">
+													<hr class="infohr" />
+												</div>
+											</div>
+										</div>
+										<div hidden="hidden">
+											<input type="text" id="info_artistCode" name="editInfo_artistCode">
+											<input type="text" id="info_artistId" name="editInfo_artistId">
+										</div>
+										<div id="artist_info">
+											<div class="col-xs-12 col-md-12">
+												<!-- 备注信息 -->
+												<div class="form-group col-md-6 editor">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="sel_edit_sex">性别</label>
+													<div class="col-md-8">
+														<select id="sel_edit_sex" class="form-control" name="editInfo_sex">
+														</select>
+													</div>
+												</div>
+
+												<div class="form-group col-md-6 editor" style="float: right">
+													<!-- 频道名称 -->
+													<label for="txt_edit_birthday"
+														class="control-label col-md-3" style="text-align: left;">出生日期</label>
+													<div class="col-md-8">
+														<input type="date" class="form-control"
+															id="txt_edit_birthday" name="editInfo_birthday"
+															placeholder="请输入出生日期" />
+													</div>
+												</div>
+											</div>
+
+											<div class="col-xs-12 col-md-12">
+												<!-- 模板类型 -->
+												<div class="form-group col-md-6 editor">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="sel_edit_nationality">国籍</label>
+													<div class="col-md-8">
+														<select id="sel_edit_nationality" name="editInfo_nationality"
+															class="form-control"></select>
+													</div>
+												</div>
+												<!-- 标签 -->
+												<div class="form-group col-md-6 editor" style="float: right">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="txt_edit_bloodGroup">血型</label>
+													<div class="col-md-8">
+														<select id="txt_edit_bloodGroup" name="editInfo_bloodGroup"
+															class="form-control"></select>
+													</div>
+												</div>
+											</div>
+
+											<div class="col-xs-12 col-md-12">
+												<!-- 出身地 -->
+												<div class="form-group col-md-6 editor">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="txt_edit_height">身高(cm)</label>
+													<div class="col-md-8">
+														<input type="text" class="form-control"
+															id="txt_edit_height" name="editInfo_height">
+													</div>
+												</div>
+												<!-- 选择关联渠道 -->
+												<div class="form-group col-md-6 editor" style="float: right">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="txt_edit_weight">体重(kg)</label>
+													<div class="col-md-8">
+														<input type="text" class="form-control"
+															id="txt_edit_weight" name="editInfo_weight">
+													</div>
+												</div>
+											</div>
+
+											<div class="col-xs-12 col-md-12">
+												<!-- 出身地 -->
+												<div class="form-group col-md-6 editor">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="txt_edit_constellation">星座</label>
+													<div class="col-md-8">
+														<select id="txt_edit_constellation" name="editInfo_constellation"
+															class="form-control"></select>
+													</div>
+												</div>
+												<!-- 选择关联渠道 -->
+												<div class="form-group col-md-6 editor" style="float: right">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="sel_edit_isTeam">是否团队组合</label>
+													<div class="col-md-8">
+														<select id="sel_edit_isTeam" name="editInfo_isTeam"
+															class="form-control"></select>
+													</div>
+												</div>
+											</div>
+
+											<div class="col-xs-12 col-md-12">
+												<!-- 出身地 -->
+												<div class="form-group col-md-6 editor">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="txt_edit_firstName">名</label>
+													<div class="col-md-8">
+														<input type="text" class="form-control"
+															id="txt_edit_firstName" name="editInfo_firstName">
+													</div>
+												</div>
+												<!-- 选择关联渠道 -->
+												<div class="form-group col-md-6 editor" style="float: right">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="txt_edit_lastName">姓</label>
+													<div class="col-md-8">
+														<input type="text" class="form-control"
+															id="txt_edit_lastName" name="editInfo_lastName">
+													</div>
+												</div>
+											</div>
+
+											<div class="col-xs-12 col-md-12">
+												<!-- 出身地 -->
+												<div class="form-group col-md-6 editor">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="txt_edit_searchName">艺术家检索名</label>
+													<div class="col-md-8">
+														<input type="text" class="form-control"
+															id="txt_edit_searchName" name="editInfo_searchName">
+													</div>
+												</div>
+												<!-- 选择关联渠道 -->
+												<div class="form-group col-md-6 editor" style="float: right">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="txt_edit_zone">归属地</label>
+													<div class="col-md-8">
+														<input type="text" class="form-control" id="txt_edit_zone"
+															name="editInfo_zone">
+													</div>
+												</div>
+											</div>
+
+											<div class="col-xs-12 col-md-12">
+												<!-- 出身地 -->
+												<div class="form-group col-md-6 editor">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="txt_edit_firstLetter">艺术家首字母</label>
+													<div class="col-md-8">
+														<input type="text" class="form-control"
+															id="txt_edit_firstLetter" name="editInfo_firstLetter">
+													</div>
+												</div>
+												<!-- 选择关联渠道 -->
+												<div class="form-group col-md-6 editor" style="float: right">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="txt_edit_companyName">艺术家所属公司名称</label>
+													<div class="col-md-8">
+														<input type="text" class="form-control"
+															id="txt_edit_companyName" name="editInfo_companyName">
+													</div>
+												</div>
+											</div>
+
+											<div class="col-xs-12 col-md-12">
+												<!-- 出身地 -->
+												<div class="form-group col-md-6 editor">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="date_edit_buildTime">艺术家出道时间</label>
+													<div class="col-md-8">
+														<input type="date" class="form-control"
+															id="date_edit_buildTime" name="editInfo_buildTime"/>
+													</div>
+												</div>
+												<!-- 选择关联渠道 -->
+												<div class="form-group col-md-6 editor" style="float: right">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="date_edit_joininTime">艺术家签约公司时间</label>
+													<div class="col-md-8">
+														<input type="date" class="form-control"
+															id="date_edit_joininTime" name="editInfo_joininTime" />
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-12 col-md-12">
+												<!-- 出身地 -->
+												<div class="form-group col-md-6 editor">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="txt_edit_education">教育程度</label>
+													<div class="col-md-8">
+														<input type="text" class="form-control"
+															id="txt_edit_education" name="editInfo_education">
+													</div>
+												</div>
+												<!-- 选择关联渠道 -->
+												<div class="form-group col-md-6 editor" style="float: right">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="txt_edit_favorite">爱好</label>
+													<div class="col-md-8">
+														<input type="text" class="form-control"
+															id="txt_edit_favorite" name="editInfo_favorite">
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-12 col-md-12">
+												<!-- 出身地 -->
+												<div class="form-group col-md-6 editor">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="txt_edit_motherTongue">母语</label>
+													<div class="col-md-8">
+														<input type="text" class="form-control"
+															id="txt_edit_motherTongue" name="editInfo_motherTongue">
+													</div>
+												</div>
+												<!-- 选择关联渠道 -->
+												<div class="form-group col-md-6 editor" style="float: right">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="sel_edit_marriage">婚姻状态</label>
+													<div class="col-md-8">
+														<select id="sel_edit_marriage" name="editInfo_marriage"
+															class="form-control"></select>
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-12 col-md-12">
+												<div class="form-group col-md-6 editor">
+													<label class="control-label col-md-3 red-star"
+														style="text-align: left;" for="txt_edit_motherTongue">默认语言</label>
+													<div class="col-md-8">
+														<select id="txt_edit_defaultLanguage" name="editInfo_defaultLanguage"
+															class="form-control"></select>
+													</div>
+												</div>
+												<div class="form-group col-md-6 editor" style="float: right">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="sel_edit_artistType">职业</label>
+													<div class="col-md-8">
+														<select id="sel_edit_artistType" name="artistType"
+															class="form-control"></select>
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-12 col-md-12">
+												<!-- 出身地 -->
+												<div class="form-group col-md-6 editor">
+													<label class="control-label col-md-3"
+														style="text-align: left;" for="txt_edit_headImg">头像图片：</label>
+													<div class="col-md-8">
+														<div style="width: 360px; height: 100%;">
+															<div class="pic_pre_div" id="326_183">
+																<img id="preImgId" class="subImg">
+																<div id="addPicId" class="pic_pre_img addBgPic pointer"></div>
+																<input type="file" id="imgFileId"
+																	onchange="getFilePath()"
+																	style="filter: alpha(opacity = 0); opacity: 0; width: 0; height: 0;" />
+																<div class="delIcon"></div>
+															</div>
+															<div style="clear: both; width: 220px">
+																<span>图片说明：支持jpg/png/gif,限制1M </span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer" style="text-align: center;">
+						<button type="button" class="btn btn-primary" id="toSure"
+							onclick="addEditData()" style="min-width: 100px;">确定</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="toClose"
+							style="min-width: 100px;">关闭</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

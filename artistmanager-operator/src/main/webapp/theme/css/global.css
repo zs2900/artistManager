@@ -1,0 +1,37 @@
+
+/*Loading样式*/
+.dv_bg_loading_css {
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        z-index: 2000;
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        background-color: #FFF;
+}
+.dv_bg_loading_transparent_css {
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        z-index: 2000;
+        position: fixed;
+        left: 0px;
+        top: 0px;
+}
+
+.dv_bg_loading_transparent_css img,.dv_bg_loading_css img {
+        margin: auto 0 auto 0;
+        width: 60px;
+        height: 60px;
+        position: relative;
+        top: 50%;
+}
+
+.dv_bg_loading_transparent_css span,.dv_bg_loading_css span {
+        margin: auto 0 auto -55px;
+        position: relative;
+        top: 51%;
+        color: #9E9494;
+        font-family: inherit;
+}

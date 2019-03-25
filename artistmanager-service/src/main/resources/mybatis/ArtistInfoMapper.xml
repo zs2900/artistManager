@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lunzn.artistmanager.dao.ArtistInfoMapper">
+  <resultMap id="BaseResultMap" type="com.lunzn.artistmanager.model.ArtistInfo">
+    <id column="artistid" jdbcType="BIGINT" property="artistId" />
+    <result column="artistcode" jdbcType="VARCHAR" property="artistCode" />
+    <result column="defaultlanguage" jdbcType="VARCHAR" property="defaultLanguage" />
+    <result column="artisttype" jdbcType="VARCHAR" property="artistType" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="birthday" jdbcType="VARCHAR" property="birthday" />
+    <result column="nationality" jdbcType="VARCHAR" property="nationality" />
+    <result column="bloodgroup" jdbcType="VARCHAR" property="bloodGroup" />
+    <result column="constellation" jdbcType="VARCHAR" property="constellation" />
+    <result column="height" jdbcType="INTEGER" property="height" />
+    <result column="weight" jdbcType="INTEGER" property="weight" />
+    <result column="isteam" jdbcType="INTEGER" property="isTeam" />
+    <result column="firstname" jdbcType="VARCHAR" property="firstName" />
+    <result column="lastname" jdbcType="VARCHAR" property="lastName" />
+    <result column="searchname" jdbcType="VARCHAR" property="searchName" />
+    <result column="zone" jdbcType="VARCHAR" property="zone" />
+    <result column="firstletter" jdbcType="VARCHAR" property="firstLetter" />
+    <result column="companyname" jdbcType="VARCHAR" property="companyName" />
+    <result column="buildtime" jdbcType="VARCHAR" property="buildTime" />
+    <result column="joinintime" jdbcType="VARCHAR" property="joininTime" />
+    <result column="education" jdbcType="VARCHAR" property="education" />
+    <result column="favorite" jdbcType="VARCHAR" property="favorite" />
+    <result column="mothertongue" jdbcType="VARCHAR" property="motherTongue" />
+    <result column="marriage" jdbcType="INTEGER" property="marriage" />
+    <result column="operationstatus" jdbcType="VARCHAR" property="operationStatus" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="updatetime" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="head_img" jdbcType="VARCHAR" property="headImg" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    artistid, artistcode, defaultlanguage, artisttype, sex, birthday, nationality, bloodgroup, 
+    constellation, height, weight, isteam, firstname, lastname, searchname, zone, firstletter, 
+    companyname, buildtime, joinintime, education, favorite, mothertongue, marriage, 
+    operationstatus, createtime, updatetime, head_img
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_artist_info
+    where artistid = #{artistid,jdbcType=BIGINT}
+  </select>
+  <!-- 查询艺人信息byartistcode -->
+  <select id="queryArtistInfoByID" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List"/>
+  	from t_artist_info
+  	where artistcode = #{artistCode,jdbcType=VARCHAR}
+  </select>
+  <!-- 删除艺人基本信息byartistcode -->
+  <delete id="deleteArtistInfo" parameterType="java.lang.String">
+    delete from t_artist_info
+    where artistcode = #{artistCode,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insertArtistInfo" parameterType="com.lunzn.artistmanager.model.ArtistInfo">
+    insert into t_artist_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="artistCode != null">
+        artistcode,
+      </if>
+      <if test="defaultLanguage != null">
+        defaultlanguage,
+      </if>
+      <if test="artistType != null">
+        artisttype,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="birthday != null">
+        birthday,
+      </if>
+      <if test="nationality != null">
+        nationality,
+      </if>
+      <if test="bloodGroup != null">
+        bloodgroup,
+      </if>
+      <if test="constellation != null">
+        constellation,
+      </if>
+      <if test="height != null">
+        height,
+      </if>
+      <if test="weight != null">
+        weight,
+      </if>
+      <if test="isTeam != null">
+        isteam,
+      </if>
+      <if test="firstName != null">
+        firstname,
+      </if>
+      <if test="lastName != null">
+        lastname,
+      </if>
+      <if test="searchName != null">
+        searchname,
+      </if>
+      <if test="zone != null">
+        zone,
+      </if>
+      <if test="firstLetter != null">
+        firstletter,
+      </if>
+      <if test="companyName != null">
+        companyname,
+      </if>
+      <if test="buildTime != null">
+        buildtime,
+      </if>
+      <if test="joininTime != null">
+        joinintime,
+      </if>
+      <if test="education != null">
+        education,
+      </if>
+      <if test="favorite != null">
+        favorite,
+      </if>
+      <if test="motherTongue != null">
+        mothertongue,
+      </if>
+      <if test="marriage != null">
+        marriage,
+      </if>
+      <if test="operationStatus != null">
+        operationstatus,
+      </if>
+      <if test="createTime == null">
+        createtime,
+      </if>
+      <if test="updateTime == null">
+        updatetime,
+      </if>
+      <if test="headImg != null">
+        head_img,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="artistCode != null">
+        #{artistCode,jdbcType=VARCHAR},
+      </if>
+      <if test="defaultLanguage != null">
+        #{defaultLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="artistType != null">
+        #{artistType,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="nationality != null">
+        #{nationality,jdbcType=VARCHAR},
+      </if>
+      <if test="bloodGroup != null">
+        #{bloodGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="constellation != null">
+        #{constellation,jdbcType=VARCHAR},
+      </if>
+      <if test="height != null">
+        #{height,jdbcType=INTEGER},
+      </if>
+      <if test="weight != null">
+        #{weight,jdbcType=INTEGER},
+      </if>
+      <if test="isTeam != null">
+        #{isTeam,jdbcType=INTEGER},
+      </if>
+      <if test="firstName != null">
+        #{firstName,jdbcType=VARCHAR},
+      </if>
+      <if test="lastName != null">
+        #{lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="searchName != null">
+        #{searchName,jdbcType=VARCHAR},
+      </if>
+      <if test="zone != null">
+        #{zone,jdbcType=VARCHAR},
+      </if>
+      <if test="firstLetter != null">
+        #{firstLetter,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="buildTime != null">
+        #{buildTime,jdbcType=VARCHAR},
+      </if>
+      <if test="joininTime != null">
+        #{joininTime,jdbcType=VARCHAR},
+      </if>
+      <if test="education != null">
+        #{education,jdbcType=VARCHAR},
+      </if>
+      <if test="favorite != null">
+        #{favorite,jdbcType=VARCHAR},
+      </if>
+      <if test="motherTongue != null">
+        #{motherTongue,jdbcType=VARCHAR},
+      </if>
+      <if test="marriage != null">
+        #{marriage,jdbcType=INTEGER},
+      </if>
+      <if test="operationStatus != null">
+        #{operationStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime == null">
+        sysdate(),
+      </if>
+      <if test="updateTime == null">
+        sysdate(),
+      </if>
+      <if test="headImg != null">
+        #{headImg,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateArtistInfo" parameterType="com.lunzn.artistmanager.model.ArtistInfo">
+    update t_artist_info
+    <set>
+      <if test="defaultLanguage != null">
+        defaultlanguage = #{defaultLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="artistType != null">
+        artisttype = #{artistType,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        birthday = #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="nationality != null">
+        nationality = #{nationality,jdbcType=VARCHAR},
+      </if>
+      <if test="bloodGroup != null">
+        bloodgroup = #{bloodGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="constellation != null">
+        constellation = #{constellation,jdbcType=VARCHAR},
+      </if>
+      <if test="height != null">
+        height = #{height,jdbcType=INTEGER},
+      </if>
+      <if test="weight != null">
+        weight = #{weight,jdbcType=INTEGER},
+      </if>
+      <if test="isTeam != null">
+        isteam = #{isTeam,jdbcType=INTEGER},
+      </if>
+      <if test="firstName != null">
+        firstname = #{firstName,jdbcType=VARCHAR},
+      </if>
+      <if test="lastName != null">
+        lastname = #{lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="searchName != null">
+        searchname = #{searchName,jdbcType=VARCHAR},
+      </if>
+      <if test="zone != null">
+        zone = #{zone,jdbcType=VARCHAR},
+      </if>
+      <if test="firstLetter != null">
+        firstletter = #{firstLetter,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        companyname = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="buildTime != null">
+        buildtime = #{buildTime,jdbcType=VARCHAR},
+      </if>
+      <if test="joininTime != null">
+        joinintime = #{joininTime,jdbcType=VARCHAR},
+      </if>
+      <if test="education != null">
+        education = #{education,jdbcType=VARCHAR},
+      </if>
+      <if test="favorite != null">
+        favorite = #{favorite,jdbcType=VARCHAR},
+      </if>
+      <if test="motherTongue != null">
+        mothertongue = #{motherTongue,jdbcType=VARCHAR},
+      </if>
+      <if test="marriage != null">
+        marriage = #{marriage,jdbcType=INTEGER},
+      </if>
+      <if test="operationStatus != null">
+        operationstatus = #{operationStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime == null">
+        updatetime = sysdate(),
+      </if>
+      <if test="headImg != null">
+        head_img = #{headImg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where artistcode = #{artistCode,jdbcType=VARCHAR}
+  </update>
+  <select id="queryAll" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from t_artist_info
+  </select>
+</mapper>

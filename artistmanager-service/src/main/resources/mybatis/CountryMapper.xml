@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lunzn.artistmanager.dao.CountryMapper">
+  <resultMap id="BaseResultMap" type="com.lunzn.artistmanager.model.Country">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="countrycode" jdbcType="VARCHAR" property="countryCode" />
+    <result column="namezh" jdbcType="VARCHAR" property="namezh" />
+    <result column="nameen" jdbcType="VARCHAR" property="nameen" />
+    <result column="regionid" jdbcType="VARCHAR" property="regionId" />
+    <result column="currencycode" jdbcType="VARCHAR" property="currencyCode" />
+    <result column="tabooconfigured" jdbcType="VARCHAR" property="tabooConfigured" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, countrycode, namezh, nameen, regionid, currencycode, tabooconfigured
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_country
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_country
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.lunzn.artistmanager.model.Country">
+    insert into t_country (id, countrycode, namezh, 
+      nameen, regionid, currencycode, 
+      tabooconfigured)
+    values (#{id,jdbcType=INTEGER}, #{countrycode,jdbcType=VARCHAR}, #{namezh,jdbcType=VARCHAR}, 
+      #{nameen,jdbcType=VARCHAR}, #{regionid,jdbcType=VARCHAR}, #{currencycode,jdbcType=VARCHAR}, 
+      #{tabooconfigured,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lunzn.artistmanager.model.Country">
+    insert into t_country
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="countrycode != null">
+        countrycode,
+      </if>
+      <if test="namezh != null">
+        namezh,
+      </if>
+      <if test="nameen != null">
+        nameen,
+      </if>
+      <if test="regionid != null">
+        regionid,
+      </if>
+      <if test="currencycode != null">
+        currencycode,
+      </if>
+      <if test="tabooconfigured != null">
+        tabooconfigured,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="countrycode != null">
+        #{countrycode,jdbcType=VARCHAR},
+      </if>
+      <if test="namezh != null">
+        #{namezh,jdbcType=VARCHAR},
+      </if>
+      <if test="nameen != null">
+        #{nameen,jdbcType=VARCHAR},
+      </if>
+      <if test="regionid != null">
+        #{regionid,jdbcType=VARCHAR},
+      </if>
+      <if test="currencycode != null">
+        #{currencycode,jdbcType=VARCHAR},
+      </if>
+      <if test="tabooconfigured != null">
+        #{tabooconfigured,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lunzn.artistmanager.model.Country">
+    update t_country
+    <set>
+      <if test="countrycode != null">
+        countrycode = #{countrycode,jdbcType=VARCHAR},
+      </if>
+      <if test="namezh != null">
+        namezh = #{namezh,jdbcType=VARCHAR},
+      </if>
+      <if test="nameen != null">
+        nameen = #{nameen,jdbcType=VARCHAR},
+      </if>
+      <if test="regionid != null">
+        regionid = #{regionid,jdbcType=VARCHAR},
+      </if>
+      <if test="currencycode != null">
+        currencycode = #{currencycode,jdbcType=VARCHAR},
+      </if>
+      <if test="tabooconfigured != null">
+        tabooconfigured = #{tabooconfigured,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lunzn.artistmanager.model.Country">
+    update t_country
+    set countrycode = #{countrycode,jdbcType=VARCHAR},
+      namezh = #{namezh,jdbcType=VARCHAR},
+      nameen = #{nameen,jdbcType=VARCHAR},
+      regionid = #{regionid,jdbcType=VARCHAR},
+      currencycode = #{currencycode,jdbcType=VARCHAR},
+      tabooconfigured = #{tabooconfigured,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryCountryList" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List"/>
+  	from t_country
+  	where 1=1
+  </select>
+</mapper>

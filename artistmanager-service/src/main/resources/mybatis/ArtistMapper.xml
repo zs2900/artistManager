@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lunzn.artistmanager.dao.ArtistMapper">
+	<resultMap id="BaseResultMap" type="com.lunzn.artistmanager.model.ArtistI18n">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="lang" jdbcType="VARCHAR" property="lang" />
+		<result column="artistcode" jdbcType="VARCHAR" property="artistCode" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="des" jdbcType="VARCHAR" property="des" />
+		<result column="hometown" jdbcType="VARCHAR" property="homeTown" />
+		<result column="alias" jdbcType="VARCHAR" property="alias" />
+		<result column="foreignname" jdbcType="VARCHAR" property="foreignName" />
+		<result column="operationstatus" jdbcType="VARCHAR" property="operationStatus" />
+	</resultMap>
+	<resultMap id="ArtistListResultMap" type="com.lunzn.artistmanager.model.ArtistList">
+		<result column="artistcode" jdbcType="VARCHAR" property="artistCode" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="hometown" jdbcType="VARCHAR" property="homeTown" />
+		<result column="alias" jdbcType="VARCHAR" property="alias" />
+		<result column="foreignname" jdbcType="VARCHAR" property="foreignName" />
+		<result column="nationality" jdbcType="VARCHAR" property="nationality" />
+		<result column="artisttype" jdbcType="VARCHAR" property="artistType" />
+		<result column="head_img" jdbcType="VARCHAR" property="headImg" />
+		<collection property="students" ofType="">
+        	
+        </collection>  
+	</resultMap>
+	<sql id="Artist_Column_List">
+		b.artistcode,a.name,a.hometown,a.alias,a.foreignname,b.nationality,b.artisttype,b.head_img
+	</sql>
+	<sql id="Base_Column_List">
+		id, lang, artistcode, name, des, hometown, alias,
+		foreignname,
+		operationstatus
+	</sql>
+	<!-- 查询艺人多语言信息byartistCode -->
+	<select id="queryArtistI18nList" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_artist_i18n
+		where artistcode = #{artistCode,jdbcType=VARCHAR}
+	</select>
+	<!-- 删除艺人多语言信息 -->
+	<delete id="deleteArtistI18n" parameterType="java.lang.String">
+		delete from
+		t_artist_i18n
+		where artistcode = #{artistCode,jdbcType=BIGINT}
+	</delete>
+	<!-- 查询艺人列表 -->
+	<select id="queryArtistList"
+		parameterType="com.lunzn.artistmanager.controller.req.QueryArtistListEvt"
+		resultMap="ArtistListResultMap">
+		select
+		<include refid="Artist_Column_List" />
+		from t_artist_i18n a inner join t_artist_info b on
+		a.artistcode=b.artistcode and a.lang=b.defaultlanguage
+		where 1=1
+		<if test="name != null and name != ''">
+			and a.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="artistCode != null and artistCode != ''">
+			and a.artistcode like
+			CONCAT('%',#{artistCode,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="homeTown != null and homeTown != ''">
+			and a.hometown like
+			CONCAT('%',#{homeTown,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="alias != null and alias != ''">
+			and a.alias like CONCAT('%',#{alias,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="foreignName != null and foreignName != ''">
+			and a.foreignname like
+			CONCAT('%',#{foreignName,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="nationality != null and nationality != ''">
+			and b.nationality = #{nationality,jdbcType=VARCHAR}
+		</if>
+		<if test="artistType != null and artistType != ''">
+			and b.artisttype = #{artistType,jdbcType=VARCHAR}
+		</if>
+		LIMIT #{offset},#{pageSize}
+	</select>
+	<!-- 查询艺人列表总数 -->
+	<select id="queryArtistListTotal"
+		parameterType="com.lunzn.artistmanager.controller.req.QueryArtistListEvt"
+		resultType="java.lang.Integer">
+		select
+		count(1)
+		from t_artist_i18n a inner join t_artist_info b on
+		a.artistcode=b.artistcode and a.lang=b.defaultlanguage
+		where 1=1
+		<if test="name != null and name != ''">
+			and a.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="artistCode != null and artistCode != ''">
+			and a.artistcode like
+			CONCAT('%',#{artistCode,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="homeTown != null and homeTown != ''">
+			and a.hometown like
+			CONCAT('%',#{homeTown,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="alias != null and alias != ''">
+			and a.alias like CONCAT('%',#{alias,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="foreignName != null and foreignName != ''">
+			and a.foreignname like
+			CONCAT('%',#{foreignName,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="nationality != null and nationality != ''">
+			and b.nationality = #{nationality,jdbcType=VARCHAR}
+		</if>
+		<if test="artistType != null and artistType != ''">
+			and b.artisttype = #{artistType,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 更新艺人多语言信息 -->
+	<update id="updateArtistArtistI18n" parameterType="java.util.List">
+		<foreach collection="list" item="artistI18n" open="" close=""
+			separator=";">
+			update t_artist_i18n
+			<set>
+				<if test="artistI18n.lang != null">
+					lang = #{artistI18n.lang,jdbcType=VARCHAR},
+				</if>
+				<if test="artistI18n.artistCode != null">
+					artistcode = #{artistI18n.artistCode,jdbcType=VARCHAR},
+				</if>
+				<if test="artistI18n.name != null">
+					name = #{artistI18n.name,jdbcType=VARCHAR},
+				</if>
+				<if test="artistI18n.des != null">
+					des = #{artistI18n.des,jdbcType=VARCHAR},
+				</if>
+				<if test="artistI18n.homeTown != null">
+					hometown = #{artistI18n.homeTown,jdbcType=VARCHAR},
+				</if>
+				<if test="artistI18n.alias != null">
+					alias = #{artistI18n.alias,jdbcType=VARCHAR},
+				</if>
+				<if test="artistI18n.foreignName != null">
+					foreignname =
+					#{artistI18n.foreignName,jdbcType=VARCHAR},
+				</if>
+				<if test="artistI18n.operationStatus != null">
+					operationstatus =
+					#{artistI18n.operationStatus,jdbcType=VARCHAR},
+				</if>
+			</set>
+			where id = #{artistI18n.id,jdbcType=BIGINT}
+		</foreach>
+	</update>
+	<!-- 存在则更新，不存在则插入 -->
+	
+	<!-- 插入 -->
+	<insert id="insertArtistI18n" parameterType="java.util.List">
+		<foreach collection="list" item="artistI18n" open="" close=""
+			separator=";">
+			insert into t_artist_i18n
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="artistI18n.lang != null">
+					lang,
+				</if>
+				<if test="artistI18n.artistCode != null">
+					artistCode,
+				</if>
+				<if test="artistI18n.name != null">
+					name,
+				</if>
+				<if test="artistI18n.des != null">
+					des,
+				</if>
+				<if test="artistI18n.homeTown != null">
+					homeTown,
+				</if>
+				<if test="artistI18n.alias != null">
+					alias,
+				</if>
+				<if test="artistI18n.foreignName != null">
+					foreignName,
+				</if>
+				<if test="artistI18n.operationStatus != null">
+					operationStatus,
+				</if>
+			</trim>
+			<trim prefix="values (" suffix=")" suffixOverrides=",">
+				<if test="artistI18n.lang != null">
+					#{artistI18n.lang,jdbcType=VARCHAR},
+				</if>
+				<if test="artistI18n.artistCode != null">
+					#{artistI18n.artistCode,jdbcType=VARCHAR},
+				</if>
+				<if test="artistI18n.name != null">
+					#{artistI18n.name,jdbcType=VARCHAR},
+				</if>
+				<if test="artistI18n.des != null">
+					#{artistI18n.des,jdbcType=VARCHAR},
+				</if>
+				<if test="artistI18n.homeTown != null">
+					#{artistI18n.homeTown,jdbcType=VARCHAR},
+				</if>
+				<if test="artistI18n.alias != null">
+					#{artistI18n.alias,jdbcType=VARCHAR},
+				</if>
+				<if test="artistI18n.foreignName != null">
+					#{artistI18n.foreignName,jdbcType=VARCHAR},
+				</if>
+				<if test="artistI18n.operationStatus != null">
+					#{artistI18n.operationStatus,jdbcType=VARCHAR},
+				</if>
+			</trim>
+		</foreach>
+	</insert>
+</mapper>
